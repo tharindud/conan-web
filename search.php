@@ -29,10 +29,7 @@
 				<div class="col-sm-4">
 				</div>
 				<div class="col-sm-4">
-					<?php
-						$query = isset($_GET["q"]) ? $_GET["q"] : "";
-						layout_search_form(5, true, false, $query);
-					?>
+					<?php layout_search_form(5, true, false, $query); ?>
 				</div>
 			</div>
 			<div class="row">
