@@ -1,8 +1,8 @@
 <?php
-	// Copyright 2017, Tharindu Dissanayake <tharindud@gmail.com>.
-	// Published under the MIT license.
+// Copyright 2017, Tharindu Dissanayake <tharindud@gmail.com>.
+// Published under the MIT license.
 
-	require_once("layout.php");
+require_once("layout.php");
 ?>
 <!DOCTYPE html>
 <html lang="en">

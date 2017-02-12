@@ -1,173 +1,173 @@
 <?php
-	// Copyright 2017, Tharindu Dissanayake <tharindud@gmail.com>.
-	// Published under the MIT license.
+// Copyright 2017, Tharindu Dissanayake <tharindud@gmail.com>.
+// Published under the MIT license.
 
-	require_once("config.php");
+require_once("config.php");
 
-	// Execute a Conan command.
-	function conan_exec($command, $args, $remote = true)
+// Execute a Conan command.
+function conan_exec($command, $args, $remote = true)
+{
+	if ($remote == true)
 	{
-		if ($remote == true)
-		{
-			$remote = (CONAN_REMOTE == "" ? "" : " -r ".CONAN_REMOTE);
-		}
-		else
-		{
-			$remote = "";
-		}
-
-		$command = CONAN_PATH."conan ".$command.$remote." ".$args;
-
-		$bad = array("`", "~", "!", "#", "$", "%", "^", "&", "(", ")", "=", "+", ";", ":", "'", "\"", "[", "]", "{", "}", "|", "<", ">");
-		foreach ($bad as $word)
-		{
-			if (strpos($command, $word) != false)
-			{
-				return "";
-			}
-		}
-
-		return shell_exec($command);
+		$remote = (CONAN_REMOTE == "" ? "" : " -r ".CONAN_REMOTE);
+	}
+	else
+	{
+		$remote = "";
 	}
 
-	// List remotes.
-	function conan_remote_list()
+	$command = CONAN_PATH."conan ".$command.$remote." ".$args;
+
+	$bad = array("`", "~", "!", "#", "$", "%", "^", "&", "(", ")", "=", "+", ";", ":", "'", "\"", "[", "]", "{", "}", "|", "<", ">");
+	foreach ($bad as $word)
 	{
-		$result = conan_exec("remote", "list", false);
-		$remotes = array();
-		foreach (explode("\n", $result) as $line)
+		if (strpos($command, $word) != false)
 		{
-			if ($line != "")
-			{
-				$name = explode(":", $line)[0];
-				$url = trim(explode("[", substr($line, strlen($name) + 1))[0]);
-				$remotes[$name] = $url;
-			}
+			return "";
 		}
-		return $remotes;
 	}
 
-	// Search for packages by name pattern.
-	function conan_search($query)
-	{
-		$result = conan_exec("search", $query);
-		$packages = array();
-		foreach (explode("\n", $result) as $line)
-		{
-			if (strpos($line, "/") === false or strpos($line, "@") == false)
-			{
-				continue;
-			}
-			$packages[count($packages)] = trim($line);
-		}
+	return shell_exec($command);
+}
 
-		return $packages;
+// List remotes.
+function conan_remote_list()
+{
+	$result = conan_exec("remote", "list", false);
+	$remotes = array();
+	foreach (explode("\n", $result) as $line)
+	{
+		if ($line != "")
+		{
+			$name = explode(":", $line)[0];
+			$url = trim(explode("[", substr($line, strlen($name) + 1))[0]);
+			$remotes[$name] = $url;
+		}
+	}
+	return $remotes;
+}
+
+// Search for packages by name pattern.
+function conan_search($query)
+{
+	$result = conan_exec("search", $query);
+	$packages = array();
+	foreach (explode("\n", $result) as $line)
+	{
+		if (strpos($line, "/") === false or strpos($line, "@") == false)
+		{
+			continue;
+		}
+		$packages[count($packages)] = trim($line);
 	}
 
-	// Search for package variants.
-	function conan_search_variants($package)
+	return $packages;
+}
+
+// Search for package variants.
+function conan_search_variants($package)
+{
+	$result = conan_exec("search", $package);
+	$packages = array();
+	$variant = null;
+	$section = "";
+	foreach (explode("\n", $result) as $line)
 	{
-		$result = conan_exec("search", $package);
-		$packages = array();
-		$variant = null;
-		$section = "";
-		foreach (explode("\n", $result) as $line)
+		if (strpos($line, "Package_ID:") != false)
 		{
-			if (strpos($line, "Package_ID:") != false)
+			$tokens = explode(":", $line);
+			$variant = array(trim($tokens[0]) => trim($tokens[1]));
+		}
+		else if ($variant != null)
+		{
+			if (strpos($line, "[") != false)
+			{
+				$line = trim($line);
+				$section = substr($line, 1, strlen($line) - 2);
+				$varians[$section] = array();
+			}
+			else if (strpos($line, ":") != false)
 			{
 				$tokens = explode(":", $line);
-				$variant = array(trim($tokens[0]) => trim($tokens[1]));
+				if (strpos($tokens[0], "outdated from recipe") === false)
+				{
+					$variant[$section][trim($tokens[0])] = trim($tokens[1]);
+				}
 			}
-			else if ($variant != null)
+			else if ($line == "")
 			{
-				if (strpos($line, "[") != false)
-				{
-					$line = trim($line);
-					$section = substr($line, 1, strlen($line) - 2);
-					$varians[$section] = array();
-				}
-				else if (strpos($line, ":") != false)
-				{
-					$tokens = explode(":", $line);
-					if (strpos($tokens[0], "outdated from recipe") === false)
-					{
-						$variant[$section][trim($tokens[0])] = trim($tokens[1]);
-					}
-				}
-				else if ($line == "")
-				{
-					$settings = $variant["settings"];
-					$key = $settings["os"]."/".$settings["arch"]."/".$settings["compiler"]." ".$settings["compiler.version"]."/".$settings["build_type"];
-					$variant["Package_Key"] = $key;
-					$packages[$key] = $variant;
-					$variant = null;
-				}
+				$settings = $variant["settings"];
+				$key = $settings["os"]."/".$settings["arch"]."/".$settings["compiler"]." ".$settings["compiler.version"]."/".$settings["build_type"];
+				$variant["Package_Key"] = $key;
+				$packages[$key] = $variant;
+				$variant = null;
 			}
 		}
-
-		ksort($packages);
-		return $packages;
 	}
 
-	// Get package info.
-	function conan_info($package)
+	ksort($packages);
+	return $packages;
+}
+
+// Get package info.
+function conan_info($package)
+{
+	$result = conan_exec("info", $package);
+	if ($result == "" || substr($result, 0, 6) == "ERROR:")
 	{
-		$result = conan_exec("info", $package);
-		if ($result == "" || substr($result, 0, 6) == "ERROR:")
-		{
-			return null;
-		}
-
-		$keys = ["License", "URL"];
-		$requires_key = "Requires";
-		$info = array($requires_key => array());
-		foreach ($keys as $key)
-		{
-			$info[$key] = $key." not available.";
-		}
-
-		$active = false;
-		$requires = false;
-		foreach (explode("\n", $result) as $line)
-		{
-			if ($line == $package)
-			{
-				$active = true;
-			}
-			else if ($active == true)
-			{
-				if (substr($line, 0, 1) != " ")
-				{
-					$active = false;
-					break;
-				}
-				else if (strpos($line, $requires_key.":") != false)
-				{
-					$requires = true;
-				}
-				else if ($requires == true && strpos($line, ":") === false)
-				{
-					$dependency = trim($line);
-					if ($dependency != "None")
-					{
-						$info[$requires_key][count($info[$requires_key])] = $dependency;
-					}
-				}
-				else
-				{
-					$requires = false;
-					foreach ($keys as $key)
-					{
-						if (strpos($line, $key.":") != false)
-						{
-							$info[$key] = substr(trim($line), strlen($key.": "));
-						}
-					}
-				}
-			}
-		}
-
-		sort($info[$requires_key]);
-		return $info;
+		return null;
 	}
+
+	$keys = ["License", "URL"];
+	$requires_key = "Requires";
+	$info = array($requires_key => array());
+	foreach ($keys as $key)
+	{
+		$info[$key] = $key." not available.";
+	}
+
+	$active = false;
+	$requires = false;
+	foreach (explode("\n", $result) as $line)
+	{
+		if ($line == $package)
+		{
+			$active = true;
+		}
+		else if ($active == true)
+		{
+			if (substr($line, 0, 1) != " ")
+			{
+				$active = false;
+				break;
+			}
+			else if (strpos($line, $requires_key.":") != false)
+			{
+				$requires = true;
+			}
+			else if ($requires == true && strpos($line, ":") === false)
+			{
+				$dependency = trim($line);
+				if ($dependency != "None")
+				{
+					$info[$requires_key][count($info[$requires_key])] = $dependency;
+				}
+			}
+			else
+			{
+				$requires = false;
+				foreach ($keys as $key)
+				{
+					if (strpos($line, $key.":") != false)
+					{
+						$info[$key] = substr(trim($line), strlen($key.": "));
+					}
+				}
+			}
+		}
+	}
+
+	sort($info[$requires_key]);
+	return $info;
+}
 ?>
