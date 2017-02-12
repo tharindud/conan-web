@@ -16,7 +16,18 @@
 			$remote = "";
 		}
 
-		return shell_exec(CONAN_PATH."conan ".$command.$remote." ".$args);
+		$command = CONAN_PATH."conan ".$command.$remote." ".$args;
+
+		$bad = array("`", "~", "!", "#", "$", "%", "^", "&", "(", ")", ";", ":", "'", "\"", "[", "]", "{", "}", "|", "<", ">");
+		foreach ($bad as $word)
+		{
+			if (strpos($command, $word) != false)
+			{
+				return "";
+			}
+		}
+
+		return shell_exec($command);
 	}
 
 	// List remotes.
