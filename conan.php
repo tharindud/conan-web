@@ -113,7 +113,6 @@
 	function conan_info($package)
 	{
 		$result = conan_exec("info", $package);
-		print("XX".$result."YY");
 		if ($result == "" || substr($result, 0, 6) == "ERROR:")
 		{
 			return null;
