@@ -67,13 +67,14 @@ require_once("layout.php");
 					$variants = array();
 					foreach ($packages as $package)
 					{
-						foreach (conan_search_variants($package) as $variant => $entry)
+						foreach (conan_search_variants($package) as $key => $variant)
 						{
-							if (array_key_exists($variant, $variants) == false)
+							$key = explode(":", $key)[0];
+							if (array_key_exists($key, $variants) == false)
 							{
-								$variants[$variant] = array();
+								$variants[$key] = array();
 							}
-							$variants[$variant][$package] = 1;
+							$variants[$key][$package] = 1;
 						}
 					}
 

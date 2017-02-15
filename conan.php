@@ -99,6 +99,7 @@ function conan_search_variants($package)
 				$settings = $variant["settings"];
 				$key = $settings["os"]."/".$settings["arch"]."/".$settings["compiler"]." ".$settings["compiler.version"]."/".$settings["build_type"];
 				$variant["Package_Key"] = $key;
+				$key = $key.":".$variant["Package_ID"];
 				$packages[$key] = $variant;
 				$variant = null;
 			}
