@@ -11,7 +11,7 @@ require_once("layout.php");
 		<?php layout_header(2, "Search"); ?>
 	</head>
 	<?php
-	$query = isset($_GET["q"]) ? $_GET["q"] : "";
+	$query = isset($_GET["query"]) ? $_GET["query"] : "";
 	if ($query != "")
 	{
 		if (strpos($query, "*") === false)
@@ -50,7 +50,7 @@ require_once("layout.php");
 					{
 						print($indent."\t\t<tr>\n");
 						print($indent."\t\t\t<td>\n");
-						print($indent."\t\t\t\t<a style=\"text-decoration:none;\" href=\"package.php?p=".$package."\">\n");
+						print($indent."\t\t\t\t<a style=\"text-decoration:none;\" href=\"package.php?package=".$package."\">\n");
 						print($indent."\t\t\t\t\t<span class=\"glyphicon glyphicon-gift\"></span>&nbsp;&nbsp;&nbsp;".$package."\n");
 						print($indent."\t\t\t\t</a>\n");
 						print($indent."\t\t\t</td>\n");

@@ -73,7 +73,7 @@ function layout_search_form($indent, $remote = true, $autofocus = true, $query =
 	}
 	print("<form action=\"search.php\">\n");
 	print($indent."\t<div class=\"input-group\">\n");
-	print($indent."\t\t<input id=\"search\" type=\"text\" class=\"form-control input-md\" name=\"q\" placeholder=\"Search\"".$input."/>\n");
+	print($indent."\t\t<input id=\"search\" type=\"text\" class=\"form-control input-md\" name=\"query\" placeholder=\"Search\"".$input."/>\n");
 	print($indent."\t\t<span class=\"input-group-btn\">\n");
 	print($indent."\t\t\t<button class=\"btn btn-md btn-primary\" type=\"submit\">\n");
 	print($indent."\t\t\t\t<i class=\"glyphicon glyphicon-search\"></i>\n");

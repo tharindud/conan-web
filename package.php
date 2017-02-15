@@ -28,7 +28,7 @@ require_once("layout.php");
 			<div class="row">
 				<div class="col-sm-12">
 					<?php
-					$package = isset($_GET["p"]) ? $_GET["p"] : "";
+					$package = isset($_GET["package"]) ? $_GET["package"] : "";
 					$indent = layout_indent(5);
 					if ($package != "")
 					{
