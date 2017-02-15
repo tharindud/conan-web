@@ -29,6 +29,7 @@ function layout_header($indent, $title = "")
 	print($indent."<meta charset=\"utf-8\"/>\n");
 	print($indent."<meta http-equiv=\"Pragma\" content=\"no-cache\"/>\n");
 	print($indent."<meta http-equiv=\"Expires\" content=\"-1\"/>\n");
+	print($indent."<link rel=\"shortcut icon\" href=\"https://www.conan.io/favicon.ico\" type=\"image/x-icon\"/>\n");
 	print($indent."<link rel=\"stylesheet\" href=\"https://bootswatch.com/".LAYOUT_THEME."/bootstrap.min.css\"/>\n");
 	print($indent."<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js\"></script>\n");
 	print($indent."<script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js\"></script>\n");
