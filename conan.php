@@ -58,7 +58,7 @@ function conan_search($query)
 		{
 			continue;
 		}
-		$packages[count($packages)] = trim($line);
+		array_push($packages, trim($line));
 	}
 
 	return $packages;
