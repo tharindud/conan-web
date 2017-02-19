@@ -2,6 +2,7 @@
 // Copyright 2017, Tharindu Dissanayake <tharindud@gmail.com>.
 // Published under the MIT license.
 
+require_once("cache.php");
 require_once("config.php");
 
 // Execute a Conan command.
@@ -27,7 +28,21 @@ function conan_exec($command, $args, $remote = true)
 		}
 	}
 
-	return shell_exec($command);
+	if (CACHE_PATH != "" && CACHE_DURATION != 0)
+	{
+		$result = cache_get($command);
+		if ($result == null)
+		{
+			$result = shell_exec($command);
+			cache_put($command, $result);
+		}
+
+		return $result;
+	}
+	else
+	{
+		return shell_exec($command);
+	}	
 }
 
 // List remotes.
@@ -96,11 +111,14 @@ function conan_search_variants($package)
 			}
 			else if ($line == "")
 			{
-				$settings = $variant["settings"];
-				$key = $settings["os"]."/".$settings["arch"]."/".$settings["compiler"]." ".$settings["compiler.version"]."/".$settings["build_type"];
-				$variant["Package_Key"] = $key;
-				$key = $key.":".$variant["Package_ID"];
-				$packages[$key] = $variant;
+				if (isset($variant["settings"]))
+				{
+					$settings = $variant["settings"];
+					$key = $settings["os"]."/".$settings["arch"]."/".$settings["compiler"]." ".$settings["compiler.version"]."/".$settings["build_type"];
+					$variant["Package_Key"] = $key;
+					$key = $key.":".$variant["Package_ID"];
+					$packages[$key] = $variant;
+				}
 				$variant = null;
 			}
 		}
