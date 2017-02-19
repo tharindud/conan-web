@@ -18,7 +18,7 @@ define("CONAN_REMOTE", "");
 // it from Conan to keep Conan invocations to a minimum. 
 define("CONAN_REMOTE_URL", "");
 
-// Cache lifetime duration for Conan command outputs. Leave this at 0 to disable command output
+// Cache lifetime duration for Conan command outputs in seconds. Leave this at 0 to disable command output
 // caching (meaning that Conan command will be executed always). If the same Conan command was
 // executed before and is available in the cache (and has not expired), output from that execution
 // would be used instead of executing a new command. Enabling caching makes the user interface

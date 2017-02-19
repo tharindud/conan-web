@@ -21,12 +21,11 @@ function cache_get($resource, $freshness = CACHE_DURATION)
 	if (file_exists($filename))
 	{
 		$now = new DateTime('now');
-		$timestamp = new DateTime('@'.stat($filename)['mtime']);
+		$mtime = new DateTime('@'.stat($filename)['mtime']);
 		
-		if ($now > $timestamp)
+		if ($now > $mtime)
 		{
-			$age = $now->diff($timestamp);
-			if ($age->i < $freshness)
+			if ($now->getTimestamp() - $mtime->getTimestamp() < $freshness)
 			{
 				$file = fopen($filename, 'r');
 				$header = strlen($resource."\n\n");
