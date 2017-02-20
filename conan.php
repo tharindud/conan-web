@@ -114,10 +114,33 @@ function conan_search_variants($package)
 				if (isset($variant["settings"]))
 				{
 					$settings = $variant["settings"];
-					$key = $settings["os"]."/".$settings["arch"]."/".$settings["compiler"]." ".$settings["compiler.version"]."/".$settings["build_type"];
-					$variant["Package_Key"] = $key;
-					$key = $key.":".$variant["Package_ID"];
-					$packages[$key] = $variant;
+					$key = "";
+					if (isset($settings["os"]))
+					{
+						$key = $settings["os"];
+					}
+					if (isset($settings["arch"]))
+					{
+						$key = $key."/".$settings["arch"];
+					}
+					if (isset($settings["compiler"]))
+					{
+						$key = $key."/".$settings["compiler"];
+					}
+					if (isset($settings["compiler.version"]))
+					{
+						$key = $key." ".$settings["compiler.version"];
+					}
+					if (isset($settings["build_type"]))
+					{
+						$key = $key."/".$settings["build_type"];
+					}
+					if ($key != "")
+					{
+						$variant["Package_Key"] = $key;
+						$key = $key.":".$variant["Package_ID"];
+						$packages[$key] = $variant;
+					}
 				}
 				$variant = null;
 			}
