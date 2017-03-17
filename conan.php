@@ -92,6 +92,7 @@ function conan_search_variants($package)
 		{
 			$tokens = explode(":", $line);
 			$variant = array(trim($tokens[0]) => trim($tokens[1]));
+			$variant["outdated"] = false;
 		}
 		else if ($variant != null)
 		{
@@ -99,7 +100,7 @@ function conan_search_variants($package)
 			{
 				$line = trim($line);
 				$section = substr($line, 1, strlen($line) - 2);
-				$varians[$section] = array();
+				$variant[$section] = array();
 			}
 			else if (strpos($line, ":") != false)
 			{
@@ -107,6 +108,10 @@ function conan_search_variants($package)
 				if (strpos($tokens[0], "outdated from recipe") === false)
 				{
 					$variant[$section][trim($tokens[0])] = trim($tokens[1]);
+				}
+				else if (strpos($tokens[1], "False") === false)
+				{
+					$variant["outdated"] = true;
 				}
 			}
 			else if ($line == "")

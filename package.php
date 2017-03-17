@@ -110,6 +110,10 @@ require_once("layout.php");
 										print($indent."\t\t\t<div class=\"panel-heading\">\n");
 										print($indent."\t\t\t\t<strong>".$package["Package_Key"]."&nbsp;&nbsp;&nbsp;&nbsp;</strong>\n");
 										print($indent."\t\t\t\t<small class=\"text-muted\">(".$package["Package_ID"].")</small>\n");
+										if ($package["outdated"])
+										{
+											print($indent."\t\t\t\t&nbsp;&nbsp;&nbsp;&nbsp;<div class=\"label label-danger\">OUTDATED</div>\n");
+										}
 										print($indent."\t\t\t</div>\n");
 										print($indent."\t\t\t<div class=\"panel-body\">\n");
 
