@@ -100,7 +100,7 @@ function layout_footer($indent, $flush = true)
 	{	
 		print(str_repeat($indent."\t<br/>\n", 8));	
 	}
-	print($indent."\t<h6>Powered by <a href=\"".CONAN_WEB_URL."\">conan-web</a> version ".CONAN_WEB_VERSION."</h6>\n");
+	print($indent."\t<h6>Powered by <a href=\"".CONAN_WEB_URL."\">conan-web</a> version ".CONAN_WEB_VERSION." | Running on ".conan_version()."</h6>\n");
 	print($indent."</div>\n");
 }
 ?>
