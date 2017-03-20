@@ -217,4 +217,10 @@ function conan_info($package)
 	sort($info[$requires_key]);
 	return $info;
 }
+
+//Get the conan client version
+function conan_version()
+{
+	return strtolower(conan_exec("--version", ""));
+}
 ?>
