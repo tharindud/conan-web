@@ -30,16 +30,17 @@ function layout_header($indent, $title = "")
 	print($indent."<meta http-equiv=\"Pragma\" content=\"no-cache\"/>\n");
 	print($indent."<meta http-equiv=\"Expires\" content=\"-1\"/>\n");
 	print($indent."<link rel=\"shortcut icon\" href=\"https://www.conan.io/favicon.ico\" type=\"image/x-icon\"/>\n");
-	print($indent."<link rel=\"stylesheet\" href=\"https://bootswatch.com/".LAYOUT_THEME."/bootstrap.min.css\"/>\n");
+	print($indent."<link rel=\"stylesheet\" href=\"https://bootswatch.com/3/".LAYOUT_THEME."/bootstrap.min.css\"/>\n");
 	print($indent."<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js\"></script>\n");
 	print($indent."<script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js\"></script>\n");
+	print($indent."<style>h1 a:hover { text-decoration: none; }</style>");
 }
 
 // Layout the application title.
 function layout_title($indent)
 {
 	$indent = layout_indent($indent);
-	print("<h1>CONAN</h1>\n");
+	print("<h1><a href=\"index.php\">CONAN</a></h1>\n");
 	print($indent."<h6>C++ Package Manager</h6>\n");
 }
 
